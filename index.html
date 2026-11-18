@@ -209,6 +209,42 @@ header{background:#253323;color:#deccaa;padding:12px 24px;display:flex;align-ite
 #loading .lt{font-size:1.05rem;color:#3a5238;margin-bottom:12px}
 #loading .lb{width:200px;height:5px;background:#ddd6cc;border-radius:3px;overflow:hidden}
 #loading .lp{height:100%;background:#3a5238;border-radius:3px;width:0%;transition:width .4s}
+#login{position:fixed;inset:0;background:#f4f1ec;display:flex;align-items:center;justify-content:center;z-index:2100;padding:16px}
+.lg-card{background:#fff;border-radius:14px;padding:30px 26px;width:100%;max-width:320px;display:flex;flex-direction:column;gap:10px;box-shadow:0 4px 24px rgba(0,0,0,.1)}
+.lg-card .lt{font-family:'Noto Serif KR',serif;font-size:1.05rem;color:#3a5238;text-align:center;margin-bottom:8px}
+.lg-card input{padding:11px 12px;border:1px solid var(--border);border-radius:8px;font-size:.9rem;font-family:inherit}
+.lg-card button{padding:12px;border:none;border-radius:8px;background:var(--accent);color:#fff;font-size:.9rem;font-family:inherit;font-weight:600;cursor:pointer}
+.lg-card button:disabled{opacity:.6}
+#lg-msg{font-size:.75rem;color:#c04040;text-align:center;min-height:1em}
+.lg-out{background:none;border:1px solid #4a6248;color:#9ab898;border-radius:5px;font-size:.62rem;padding:1px 6px;cursor:pointer;font-family:inherit}
+/* ── 분양불가·관리자 설정 ── */
+.cell.na,.cell-b.na{background:#e5e5e5!important;border-color:#bdbdbd!important;color:#9e9e9e!important}
+.editable{outline:2px dashed #b45309;outline-offset:1px}
+.adm-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 10px;font-size:.72rem;color:var(--text2)}
+.adm-bar button{padding:5px 10px;border:1px solid #b45309;border-radius:7px;background:#fff7ed;color:#9a3412;font-family:inherit;font-size:.72rem;cursor:pointer}
+.adm-bar button.on{background:#b45309;color:#fff}
+/* ── 예약 ── */
+.cell.hold-req,.cell-b.hold-req{background:#fde68a!important;border-color:#d97706!important;color:#78350f!important}
+.cell.hold-ok,.cell-b.hold-ok{background:#fdba74!important;border-color:#c2410c!important;color:#7c2d12!important}
+.hold-mine{outline:2px solid #2563eb;outline-offset:1px}
+.ovl{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:1500;display:flex;align-items:center;justify-content:center;padding:16px}
+.ovl-card{background:#fff;border-radius:12px;padding:18px 20px;width:100%;max-width:360px;max-height:90vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.25)}
+.ovl-h{display:flex;justify-content:space-between;align-items:center;font-family:'Noto Serif KR',serif;font-weight:700;color:var(--accent);margin-bottom:10px}
+.ovl-x{background:none;border:none;font-size:1rem;cursor:pointer;color:var(--text2)}
+.rq-key{font-family:monospace;font-size:.95rem;font-weight:700;margin-bottom:8px}
+.rq-state{font-size:.8rem;line-height:1.9}
+#rq-form{display:flex;flex-direction:column;gap:9px}
+#rq-form label{display:flex;flex-direction:column;gap:3px;font-size:.74rem;color:var(--text2)}
+#rq-form input{padding:9px 10px;border:1px solid var(--border);border-radius:7px;font-size:.88rem;font-family:inherit}
+#rq-form small{font-size:.66rem;color:var(--text2);line-height:1.6}
+#rq-form button,.rq-cancel,.adm-t button{padding:10px;border:none;border-radius:7px;background:var(--accent);color:#fff;font-family:inherit;font-weight:600;cursor:pointer}
+.rq-cancel{background:#b04040;margin-top:6px}
+#rq-msg{font-size:.75rem;color:#c04040;margin-top:8px}
+.adm-t{width:100%;border-collapse:collapse;font-size:.76rem}
+.adm-t th,.adm-t td{padding:7px 6px;border-bottom:1px solid var(--border);text-align:left;white-space:nowrap}
+.adm-t th{color:var(--text2);font-weight:500}
+.adm-t button{padding:4px 10px;font-size:.7rem;margin-right:4px}
+.adm-t button.no{background:#b04040}
 #loading small{font-size:.7rem;color:#9a9288;margin-top:8px;font-family:'Noto Sans KR',sans-serif}
 
 @media(max-width:600px){
@@ -226,6 +262,17 @@ header{background:#253323;color:#deccaa;padding:12px 24px;display:flex;align-ite
   <small id="lt2">데이터 로딩 중...</small>
 </div>
 
+<!-- 로그인 -->
+<div id="login" style="display:none">
+  <form class="lg-card" onsubmit="doLogin(event)">
+    <div class="lt">⚘ 안치단 현황판</div>
+    <input id="lg-id" placeholder="아이디" autocomplete="username" required>
+    <input id="lg-pw" type="password" placeholder="비밀번호" autocomplete="current-password" required>
+    <button id="lg-btn" type="submit">로그인</button>
+    <div id="lg-msg"></div>
+  </form>
+</div>
+
 <header>
   <div style="display:flex;align-items:center;gap:0">
     <button class="home-btn" onclick="goHome()" title="홈으로">🏠</button>
@@ -237,7 +284,12 @@ header{background:#253323;color:#deccaa;padding:12px 24px;display:flex;align-ite
     <div class="hs"><div class="n" id="hb" style="color:#b0a8e0">-</div><div class="l">분양완료</div></div>
     <div class="hs"><div class="n" id="hr" style="color:#e8c860">-</div><div class="l">분양률</div></div>
   </div>
-  <div id="upload-status" style="font-size:.68rem;color:#e8c860;white-space:nowrap">⏳ 데이터 불러오는 중...</div>
+  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+    <div id="upload-status" style="font-size:.68rem;color:#e8c860;white-space:nowrap">⏳ 데이터 불러오는 중...</div>
+    <div style="font-size:.66rem;color:#7a9e78"><span id="who"></span><span id="my-hold"></span>
+      <button class="lg-out" id="adm-btn" style="display:none;color:#e8c860;border-color:#e8c860" onclick="document.getElementById('adm').style.display='flex'">📋 예약 관리</button>
+      <button class="lg-out" onclick="doLogout()">로그아웃</button></div>
+  </div>
 </header>
 
 <!-- 네비게이션 -->
@@ -267,6 +319,9 @@ header{background:#253323;color:#deccaa;padding:12px 24px;display:flex;align-ite
   <div class="leg"><div class="ld-w" style="background:var(--mi-b);border:1.5px solid var(--mi-bb)"></div>미분양·부부</div>
   <div class="leg"><div class="ld"   style="background:var(--bun-i);border:1.5px solid var(--bun-ib)"></div>분양·개인</div>
   <div class="leg"><div class="ld-w" style="background:var(--bun-b);border:1.5px solid var(--bun-bb)"></div>분양·부부</div>
+  <div class="leg"><div class="ld" style="background:#fde68a;border:1.5px solid #d97706"></div>요청중</div>
+  <div class="leg"><div class="ld" style="background:#fdba74;border:1.5px solid #c2410c"></div>가예약</div>
+  <div class="leg" id="leg-na" style="display:none"><div class="ld" style="background:#e5e5e5;border:1.5px solid #bdbdbd"></div>분양불가</div>
   <div class="spacer"></div>
   <span style="font-size:.7rem;color:var(--text2)">보기:</span>
   <select class="csel" id="fshow" onchange="applyDim()">
@@ -358,6 +413,36 @@ header{background:#253323;color:#deccaa;padding:12px 24px;display:flex;align-ite
 
 <div id="tip"></div>
 
+<!-- 예약 요청 창 -->
+<div id="rq" class="ovl" style="display:none" onclick="if(event.target===this)rqClose()">
+  <div class="ovl-card">
+    <div class="ovl-h">자리 예약 요청 <button class="ovl-x" onclick="rqClose()">✕</button></div>
+    <div id="rq-key" class="rq-key"></div>
+    <div id="rq-state" class="rq-state"></div>
+    <form id="rq-form" onsubmit="rqSubmit(event)">
+      <label>영업자명<input id="rq-seller" required maxlength="20"></label>
+      <label>고인명<input id="rq-dec" required maxlength="40"></label>
+      <label>안치예정일<input id="rq-date" type="date" required></label>
+      <small>요청 후 사무실에서 확인되면 가예약으로 바뀝니다. 가예약은 안치예정일까지 유지되며, 1인당 1자리만 요청할 수 있습니다.</small>
+      <button type="submit" id="rq-btn">요청 보내기</button>
+    </form>
+    <div id="rq-msg"></div>
+  </div>
+</div>
+
+<!-- 관리자: 예약 요청 관리 -->
+<div id="adm" class="ovl" style="display:none" onclick="if(event.target===this)this.style.display='none'">
+  <div class="ovl-card" style="max-width:820px">
+    <div class="ovl-h">📋 예약 요청 관리 <button class="ovl-x" onclick="document.getElementById('adm').style.display='none'">✕</button></div>
+    <div style="overflow-x:auto">
+      <table class="adm-t">
+        <thead><tr><th>봉안번호</th><th>영업자</th><th>고인명</th><th>안치예정일</th><th>상태</th><th></th></tr></thead>
+        <tbody id="adm-body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
 <script>const ST={};</script>
 <script>const TP={};</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -441,7 +526,7 @@ function hallStats(hall){
   Object.values(ST[hall]).forEach(dirs=>Object.values(dirs).forEach(cols=>
     Object.values(cols).forEach(cells=>cells.forEach(c=>{
       const n=c[2]==='부'?2:1;
-      total+=n; if(c[3]) mi+=n;
+      if(c[3]===2) return; total+=n; if(c[3]===1) mi+=n;
     }))
   ));
   return {mi,total};
@@ -451,7 +536,7 @@ function roomStats(hall,room){
   let mi=0,total=0;
   if(!ST[hall]||!ST[hall][room]) return {mi,total};
   Object.values(ST[hall][room]).forEach(cols=>Object.values(cols).forEach(cells=>
-    cells.forEach(c=>{const n=c[2]==='부'?2:1; total+=n; if(c[3]) mi+=n;})
+    cells.forEach(c=>{const n=c[2]==='부'?2:1; if(c[3]===2) return; total+=n; if(c[3]===1) mi+=n;})
   ));
   return {mi,total};
 }
@@ -460,7 +545,7 @@ function dirStats(hall,room,dir){
   let mi=0,total=0;
   if(!ST[hall]||!ST[hall][room]||!ST[hall][room][dir]) return {mi,total};
   Object.values(ST[hall][room][dir]).forEach(cells=>cells.forEach(c=>{
-    const n=c[2]==='부'?2:1; total+=n; if(c[3]) mi+=n;
+    const n=c[2]==='부'?2:1; if(c[3]===2) return; total+=n; if(c[3]===1) mi+=n;
   }));
   return {mi,total};
 }
@@ -518,9 +603,10 @@ function buildLv3(hall){
     const label=room+(isSpecial?'구역':'실');
     const rel=getRel(hall,room);
     const relCls=rel?` is-${rel}`:'';
-    h+=`<div class="lv3-tab${relCls}" data-hall="${hall}" data-room="${room}" onclick="selectRoom('${hall}','${room}')">
-      <span class="rname">${label}</span>
-      <span class="rbadge">미분양 ${s.mi}</span>
+    const hid=isHiddenRoom(hall,room); // 관리자에게만 보임
+    h+=`<div class="lv3-tab${relCls}" data-hall="${hall}" data-room="${room}" onclick="selectRoom('${hall}','${room}')"${hid?' style="opacity:.55"':''}>
+      <span class="rname">${hid?'🚫 ':''}${label}</span>
+      <span class="rbadge">${hid?'숨김 · ':''}미분양 ${s.mi}</span>
     </div>`;
   });
   document.getElementById('lv3-tabs').innerHTML=h;
@@ -562,6 +648,12 @@ function renderRoom(hall,room){
     <span class="mi-num">미분양 <strong>${rs.mi}</strong>기수</span>
     <span>분양률 <strong>${rs.total?Math.round((rs.total-rs.mi)/rs.total*100):0}%</strong></span>
   </div>
+  ${IS_ADMIN?`<div class="adm-bar">
+    <button onclick="toggleEdit()" class="${EDIT?'on':''}">🔧 분양불가 설정 ${EDIT?'끝내기':''}</button>
+    <button onclick="toggleRoomHidden('${hall}','${room}')">${isHiddenRoom(hall,room)?'👁 이 실 보이기':'🚫 이 실 숨기기'}</button>
+    ${EDIT?'<span>칸을 누르면 미분양 ↔ 분양불가가 바뀝니다 (분양된 칸은 제외)</span>':''}
+    ${isHiddenRoom(hall,room)?'<span style="color:#b04040">이 실은 영업자에게 보이지 않습니다</span>':''}
+  </div>`:''}
   <div class="dir-tabs">`;
 
   roomDirs.forEach(dir=>{
@@ -685,9 +777,13 @@ function renderGrid(hall,room,dir){
           isHl = typeOk && danOk && gradeOk;
         }
 
-        h+=`<div class="${cellCls} ${cls}${isHl?' hl-match':''}" style="width:${w}px;height:${sz}px"
+        const hd=isMi?activeHold(key):null;
+        const hdCls=hd?` hold-${hd.status}${hd.uid===ME?' hold-mine':''}`:'';
+        const na=cell[3]===2; // 분양불가
+        h+=`<div class="${cellCls} ${cls}${isHl&&!hd?' hl-match':''}${hdCls}${na?' na':''}${EDIT&&cell[3]!==0?' editable':''}" style="width:${w}px;height:${sz}px"
+          onclick="cellClick('${ek}',${cell[3]})"
           onmouseenter="showT(event,'${ek}')" onmouseleave="hideT()" ontouchstart="showT(event,'${ek}');event.stopPropagation()" ontouchend="event.stopPropagation()">
-          <span class="cell-ico">${isMi?(isBu?'○○':'○'):(isBu?'●●':'●')}</span>
+          <span class="cell-ico">${na?(isBu?'✕✕':'✕'):hd?(isBu?'◐◐':'◐'):isMi?(isBu?'○○':'○'):(isBu?'●●':'●')}</span>
           ${sz>=28?`<span class="cell-seq">${cell[0]}</span>`:''}
         </div>`;
       }
@@ -772,8 +868,12 @@ function showT(e,key){
   }
 
   const isBu=p[1]&&p[1].includes('부부');
+  const hd=isMi?activeHold(key):null;
+  const stTxt=hd?(hd.status==='ok'?'◐ 가예약':'◐ 요청중')+(hd.uid===ME?' (내 요청)':'')
+             :isMi?'◎ 미분양 (클릭하면 예약 요청)'
+             :(findCell(key)||[])[3]===2?'✕ 분양불가':'● 분양완료';
   tip.innerHTML='<div class="tn">📌 '+key+'</div>'
-    +'<div class="'+(isMi?'ts-mi':'ts-bun')+'">'+(isMi?'◎ 미분양 (빈자리)':'● 분양완료')
+    +'<div class="'+(isMi&&!hd?'ts-mi':'ts-bun')+'">'+stTxt
     +'<span class="tt '+(isBu?'tt-bu':'tt-in')+'">'+(isBu?'부부단 2인':'개인단 1인')+'</span></div>'
     +'<div style="font-size:.7rem;opacity:.85;margin-top:3px">'+locLabel+'</div>'
     +'<div style="font-size:.7rem;opacity:.85">'+(p[0]||'-')+' / '+(p[1]||'-')+'</div>'
@@ -890,6 +990,7 @@ function wzExec(){
             if(WZ.type){ const ct=c[2]==='부'?'부부단':'개인단'; if(ct!==WZ.type) return; }
             if(!danAll && !danNums.has(c[1])) return;
             const key=buildKey(hall,room,dir,colNum,c[0]);
+            if(activeHold(key)) return; // 요청중·가예약 자리는 검색에서 제외
             const tp=TP[key]||'';
             if(!gradeAll && ![...WZ.grades].some(g=>tp.startsWith(g))) return;
             cnt++;
@@ -1006,12 +1107,157 @@ wzGo(0);
 
 // ── 위자드 끝 ──
 
+// ══ 분양불가·숨김 (관리자 설정) ══
+// config/block : {rooms:['홀_실',...], cells:['봉안번호',...]}
+// RAW = 업로드 원본, ST = 화면용 (영업자: 숨긴 실 제외 / 분양불가 칸은 상태 2)
+let RAW={};
+let BLOCK={rooms:[],cells:[]};
+let IS_ADMIN=false;
+let EDIT=false;
+function isHiddenRoom(hall,room){ return BLOCK.rooms.includes(hall+'_'+room); }
+
+function applyView(){
+  const hideR=new Set(BLOCK.rooms), blk=new Set(BLOCK.cells);
+  Object.keys(ST).forEach(k=>delete ST[k]);
+  Object.entries(RAW).forEach(([hall,rooms])=>Object.entries(rooms).forEach(([room,dirs])=>{
+    if(!IS_ADMIN && hideR.has(hall+'_'+room)) return;
+    const R=((ST[hall]=ST[hall]||{})[room]={});
+    Object.entries(dirs).forEach(([dir,cols])=>{
+      R[dir]={};
+      Object.entries(cols).forEach(([col,cells])=>{
+        // 분양불가: 관리자는 회색(2), 영업자에게는 분양완료(0)와 똑같이 보임
+        R[dir][col]=cells.map(c=>c[3]===1&&blk.has(buildKey(hall,room,dir,col,c[0]))?[c[0],c[1],c[2],IS_ADMIN?2:0]:c);
+      });
+    });
+  }));
+  document.getElementById('leg-na').style.display=IS_ADMIN?'flex':'none';
+  updateHeaderStats();
+  buildLv2();
+  document.querySelectorAll('.lv2-tab').forEach(t=>t.classList.toggle('active',t.dataset.hall===curHall));
+  if(curHall&&ST[curHall]&&document.getElementById('lv3-row').style.display!=='none') buildLv3(curHall);
+  if(curHall&&curRoom) renderRoom(curHall,curRoom);
+}
+function toggleEdit(){ EDIT=!EDIT; if(curHall&&curRoom) renderRoom(curHall,curRoom); }
+function toggleRoomHidden(hall,room){
+  const hide=!isHiddenRoom(hall,room);
+  if(!confirm(`${hall} ${room}실을 영업자에게 ${hide?'숨길까요':'보이게 할까요'}?`)) return;
+  blockApi.room(hall+'_'+room, hide).catch(err=>alert('저장 실패: '+err.message));
+}
+
+// ══ 예약 요청 ══
+// holds/{봉안번호}    : {uid, status:'req'|'ok', until, at}  → 로그인한 모두가 봄 (자리 색 표시용)
+// holdInfo/{봉안번호} : {uid, key, seller, deceased, date} → 관리자와 요청한 본인만 봄 (개인정보)
+const HOLDS={};
+let ME=null;          // 로그인 uid
+let ADMIN_INFO=null;  // 관리자일 때만 채워짐
+
+function activeHold(key){
+  const h=HOLDS[key];
+  return h&&h.until&&h.until.toMillis()>Date.now()?h:null; // 안치예정일 지나면 자동 해제
+}
+function myHold(){ return Object.keys(HOLDS).find(k=>HOLDS[k].uid===ME&&activeHold(k)); }
+function esc(s){ return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function todayStr(){ const d=new Date(); d.setMinutes(d.getMinutes()-d.getTimezoneOffset()); return d.toISOString().slice(0,10); }
+
+function findCell(key){
+  const p=key.split('-'), R=ST[p[0]]&&ST[p[0]][p[1]];
+  if(!R) return null;
+  if(p.length===3){
+    for(const d in R) for(const c in R[d]){ const x=R[d][c].find(x=>x[0]===p[2]); if(x) return x; }
+    return null;
+  }
+  const cells=R[p[2][0]]&&R[p[2][0]][p[2].slice(1)];
+  return cells&&cells.find(x=>x[0]===p[3])||null;
+}
+
+function holdsChanged(){
+  if(curHall&&curRoom) renderRoom(curHall,curRoom);
+  const m=myHold();
+  document.getElementById('my-hold').textContent=m?` · 내 요청 ${m} (${HOLDS[m].status==='ok'?'가예약':'요청중'})`:'';
+  if(ADMIN_INFO) renderAdmin();
+}
+
+function cellClick(key,st){
+  hideT();
+  if(EDIT){ if(st!==0) blockApi.cell(key, st===1); return; } // 관리자 설정 모드: 미분양 ↔ 분양불가
+  if(st!==1) return;
+  const h=activeHold(key), mine=h&&h.uid===ME;
+  const dlg=document.getElementById('rq');
+  dlg.dataset.key=key;
+  document.getElementById('rq-key').textContent='📌 '+key;
+  document.getElementById('rq-form').style.display=h?'none':'flex';
+  document.getElementById('rq-state').innerHTML=!h?'':mine
+    ?`내 요청 · <strong>${h.status==='ok'?'가예약 (수락됨)':'사무실 확인 대기중'}</strong><br><button class="rq-cancel" onclick="rqCancel()">요청 취소</button>`
+    :`이미 <strong>${h.status==='ok'?'가예약':'요청중'}</strong>인 자리입니다.`;
+  document.getElementById('rq-msg').textContent='';
+  try{ document.getElementById('rq-seller').value=localStorage.getItem('seller')||''; }catch(e){}
+  document.getElementById('rq-dec').value='';
+  document.getElementById('rq-date').value='';
+  document.getElementById('rq-date').min=todayStr();
+  dlg.style.display='flex';
+}
+function rqClose(){ document.getElementById('rq').style.display='none'; }
+
+async function rqSubmit(e){
+  e.preventDefault();
+  const key=document.getElementById('rq').dataset.key, msg=document.getElementById('rq-msg');
+  // ponytail: 1인 1자리 제한은 화면에서만 검사함. 최종 확인은 사무실 수락 단계
+  const m=myHold();
+  if(m){ msg.textContent=`이미 요청한 자리가 있습니다 (${m}). 그 요청을 취소한 뒤 다시 요청하세요.`; return; }
+  const seller=document.getElementById('rq-seller').value.trim();
+  const deceased=document.getElementById('rq-dec').value.trim();
+  const date=document.getElementById('rq-date').value;
+  if(date<todayStr()){ msg.textContent='안치예정일은 오늘 이후여야 합니다.'; return; }
+  try{ localStorage.setItem('seller',seller); }catch(e){}
+  const btn=document.getElementById('rq-btn'); btn.disabled=true;
+  try{
+    await holdApi.request(key,{seller,deceased,date});
+    rqClose();
+    alert('요청을 보냈습니다. 사무실에서 확인하면 가예약으로 바뀝니다.');
+  }catch(err){
+    msg.textContent=err.code==='permission-denied'?'이미 다른 요청이 들어간 자리입니다.':'요청 실패: '+err.message;
+  }
+  btn.disabled=false;
+}
+async function rqCancel(){
+  if(!confirm('이 자리 요청을 취소할까요?')) return;
+  try{ await holdApi.remove(document.getElementById('rq').dataset.key); rqClose(); }
+  catch(err){ alert('취소 실패: '+err.message); }
+}
+
+// ── 관리자 ──
+function renderAdmin(){
+  const rows=Object.keys(ADMIN_INFO).map(k=>{
+    const hd=HOLDS[k];
+    const st=!hd?'없음':!activeHold(k)?'만료':hd.status==='ok'?'가예약':'대기';
+    return {k,i:ADMIN_INFO[k],st};
+  }).sort((a,b)=>(a.st==='대기'?0:1)-(b.st==='대기'?0:1)||a.k.localeCompare(b.k,void 0,{numeric:true}));
+  const pend=rows.filter(r=>r.st==='대기').length;
+  const btn=document.getElementById('adm-btn');
+  btn.style.display='inline-block';
+  btn.textContent='📋 예약 관리'+(pend?` (대기 ${pend})`:'');
+  let h='';
+  rows.forEach(({k,i,st})=>{
+    const c=findCell(k), sold=c&&c[3]===0?' <span style="color:#c04040">(이미 분양)</span>':'';
+    h+=`<tr><td>${esc(k)}${sold}</td><td>${esc(i.seller)}</td><td>${esc(i.deceased)}</td><td>${esc(i.date)}</td>
+      <td>${st==='대기'?'<strong style="color:#b45309">대기</strong>':st}</td><td>
+      ${st==='대기'?`<button onclick="admAccept('${esc(k)}')">수락</button>`:''}
+      <button class="no" onclick="admRemove('${esc(k)}','${st}')">${st==='대기'?'거절':'해제'}</button></td></tr>`;
+  });
+  document.getElementById('adm-body').innerHTML=h||'<tr><td colspan="6" style="color:var(--text2)">요청 없음</td></tr>';
+}
+function admAccept(k){ holdApi.accept(k).catch(err=>alert('수락 실패: '+err.message)); }
+function admRemove(k,st){
+  if(!confirm(`${k} 요청을 ${st==='대기'?'거절':'해제'}할까요?`)) return;
+  holdApi.remove(k).catch(err=>alert('처리 실패: '+err.message));
+}
+
 // ── 헤더 통계 갱신 ──
 function updateHeaderStats(){
   let all=0,mi=0;
   Object.values(ST).forEach(rooms=>Object.values(rooms).forEach(dirs=>
     Object.values(dirs).forEach(cols=>Object.values(cols).forEach(cells=>
-      cells.forEach(c=>{const n=c[2]==='부'?2:1;all+=n;if(c[3])mi+=n;})))));
+      cells.forEach(c=>{const n=c[2]==='부'?2:1;if(c[3]===2)return;all+=n;if(c[3]===1)mi+=n;})))));
   const bun=all-mi;
   document.getElementById('ht').textContent=all.toLocaleString();
   document.getElementById('hm').textContent=mi.toLocaleString();
@@ -1023,7 +1269,8 @@ function updateHeaderStats(){
 <!-- Firebase -->
 <script type="module">
 import { initializeApp }                        from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, collection, onSnapshot, writeBatch, updateDoc, setDoc, arrayUnion, arrayRemove, Timestamp, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey:"AIzaSyDd6SYFy5UX3O8KG0vCykeu-YtUWrljy6s",
@@ -1091,13 +1338,12 @@ async function loadFromFirebase(){
     }
 
     // 전역 변수 교체
-    Object.keys(ST).forEach(k=>delete ST[k]);
-    Object.assign(ST, newST);
+    RAW = newST;
     Object.keys(TP).forEach(k=>delete TP[k]);
     Object.assign(TP, newTP);
     applyHallMeta(bldOf);
 
-    updateHeaderStats();
+    applyView(); // 숨긴 실·분양불가 반영해서 ST 만들기
 
     document.getElementById('lp').style.width='100%';
     document.getElementById('lt2').textContent='완료!';
@@ -1117,9 +1363,90 @@ async function loadFromFirebase(){
   }
 }
 
-document.addEventListener('DOMContentLoaded', ()=>{
-  document.getElementById('lp').style.width='50%';
-  document.getElementById('lt2').textContent='Firebase 데이터 불러오는 중...';
+// ── 로그인 ── (아이디만 입력하면 @anchidan.app 을 붙임)
+const auth = getAuth(app);
+const DOMAIN = '@anchidan.app';
+const toEmail = id => id.includes('@') ? id : id + DOMAIN;
+
+window.doLogin = async e => {
+  e.preventDefault();
+  const btn = document.getElementById('lg-btn'), msg = document.getElementById('lg-msg');
+  btn.disabled = true; msg.textContent = '';
+  try {
+    await signInWithEmailAndPassword(auth, toEmail(document.getElementById('lg-id').value.trim()),
+                                     document.getElementById('lg-pw').value);
+  } catch (err) {
+    msg.textContent = err.code === 'auth/too-many-requests'
+      ? '시도가 너무 많습니다. 잠시 후 다시 해주세요'
+      : '아이디 또는 비밀번호가 맞지 않습니다';
+  }
+  btn.disabled = false;
+};
+window.doLogout = () => signOut(auth).then(() => location.reload());
+
+// ── 예약 요청 (Firestore) ──
+window.holdApi = {
+  async request(key, info){
+    const uid = auth.currentUser.uid;
+    const b = writeBatch(db);
+    b.set(doc(db,'holds',key), { uid, status:'req', until: Timestamp.fromDate(new Date(info.date+'T23:59:59')), at: serverTimestamp() });
+    b.set(doc(db,'holdInfo',key), { uid, key, ...info });
+    await b.commit();
+  },
+  async remove(key){
+    const b = writeBatch(db);
+    b.delete(doc(db,'holds',key));
+    b.delete(doc(db,'holdInfo',key));
+    await b.commit();
+  },
+  accept: key => updateDoc(doc(db,'holds',key), { status:'ok' })
+};
+
+function watchHolds(){
+  // 자리 상태: 실시간 반영
+  onSnapshot(collection(db,'holds'), snap => {
+    Object.keys(HOLDS).forEach(k => delete HOLDS[k]);
+    snap.forEach(d => { HOLDS[d.id] = d.data(); });
+    holdsChanged();
+  }, err => console.error('holds', err));
+  // 요청 상세: 관리자만 읽기 가능 → 읽히면 관리자 화면 표시, 영업자는 권한 없음(무시)
+  onSnapshot(collection(db,'holdInfo'), snap => {
+    ADMIN_INFO = {};
+    snap.forEach(d => { ADMIN_INFO[d.id] = d.data(); });
+    if (!IS_ADMIN) { IS_ADMIN = true; applyView(); } // 관리자는 숨긴 실도 보임
+    renderAdmin();
+  }, () => {});
+  // 분양불가·숨김 설정: 실시간 반영
+  onSnapshot(doc(db,'config','block'), d => {
+    const v = d.exists() ? d.data() : {};
+    BLOCK = { rooms: v.rooms || [], cells: v.cells || [] };
+    applyView();
+  }, err => console.error('block', err));
+}
+
+// ── 관리자: 분양불가·숨김 저장 ──
+window.blockApi = {
+  cell: (key, on) => setDoc(doc(db,'config','block'), { cells: on ? arrayUnion(key) : arrayRemove(key) }, { merge:true })
+                       .catch(err => alert('저장 실패: ' + err.message)),
+  room: (id, on)  => setDoc(doc(db,'config','block'), { rooms: on ? arrayUnion(id) : arrayRemove(id) }, { merge:true })
+};
+
+let loaded = false;
+onAuthStateChanged(auth, user => {
+  if (!user) {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('login').style.display = 'flex';
+    return;
+  }
+  document.getElementById('login').style.display = 'none';
+  document.getElementById('who').textContent = user.email.replace(DOMAIN, '');
+  if (loaded) return;
+  loaded = true;
+  ME = user.uid;
+  watchHolds();
+  document.getElementById('loading').style.display = 'flex';
+  document.getElementById('lp').style.width = '50%';
+  document.getElementById('lt2').textContent = 'Firebase 데이터 불러오는 중...';
   loadFromFirebase();
 });
 </script>
