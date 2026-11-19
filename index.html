@@ -52,6 +52,8 @@ header{background:#253323;color:#deccaa;padding:12px 24px;display:flex;align-ite
 .lv3-tab .rbadge{font-size:.58rem;padding:1px 5px;border-radius:6px;background:#d8e8d0;color:#2a5228}
 .lv3-tab.active .rbadge{background:rgba(255,255,255,.25);color:#fff}
 .lv3-tab .rname{font-weight:500}
+.gbdg{font-size:.58rem;padding:1px 5px;border-radius:6px;background:#ece8e0;color:#6a6258;margin-left:4px;white-space:nowrap}
+.gbdg.hi{background:#f6e7b8;color:#7a5a10}
 
 /* ── 컨트롤 바 ── */
 .ctrl-bar{background:var(--panel);border-bottom:1px solid var(--border);padding:7px 24px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
@@ -257,6 +259,14 @@ header{background:#253323;color:#deccaa;padding:12px 24px;display:flex;align-ite
 .dday-red{color:#c04040;font-weight:600}
 .adm-foot{margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:.72rem;color:var(--text2)}
 .adm-foot button{background:none;border:none;color:#2563eb;text-decoration:underline;cursor:pointer;font-family:inherit;font-size:.72rem}
+.cfg-tabs{border-bottom:1px solid var(--border);padding-bottom:8px;margin-bottom:12px}
+.rel-ca{background:#dbeafe!important;color:#1e3a8a!important}.rel-ch{background:#fee2e2!important;color:#7f1d1d!important}
+.rel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:8px;margin-top:8px}
+.rel-card{border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:.78rem}
+.rel-card.catholic{background:#dbeafe;border-color:#93c5fd}.rel-card.christian{background:#fee2e2;border-color:#fca5a5}
+.seg{display:flex;margin-top:6px;border:1px solid #bbb;border-radius:6px;overflow:hidden}
+.seg button{flex:1;border:none;background:#fff;font-family:inherit;font-size:.66rem;padding:4px 0;cursor:pointer;color:var(--text2)}
+.seg button.on{background:var(--accent);color:#fff}
 .cfg-met{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:12px}
 .cfg-met>div{background:#f4f1ec;border-radius:8px;padding:9px 12px;font-size:.68rem;color:var(--text2)}
 .cfg-met b{display:block;font-size:1.15rem;color:var(--text);font-weight:600;margin-top:2px}
@@ -467,7 +477,8 @@ header{background:#253323;color:#deccaa;padding:12px 24px;display:flex;align-ite
 <div id="cfg" class="ovl" style="display:none" onclick="if(event.target===this){this.style.display='none';CFG_OPEN=false}">
   <div class="ovl-card" style="max-width:760px">
     <div class="ovl-h">🔧 분양 설정 관리 <button class="ovl-x" onclick="document.getElementById('cfg').style.display='none';CFG_OPEN=false">✕</button></div>
-    <div class="cfg-met" id="cfg-met"></div>
+    <div class="adm-chips cfg-tabs" id="cfg-tabs"></div>
+    <div id="cfg-met"></div>
     <div id="cfg-halls"></div>
     <div id="cfg-rooms"></div>
     <div class="adm-foot" id="cfg-foot"></div>
@@ -529,12 +540,28 @@ function applyHallMeta(bldOf){
   // 특별홀 = 봉안번호가 3마디(홀-구역-번호)인 홀
   const sp=new Set(Object.keys(TP).filter(k=>k.split('-').length===3).map(k=>k.split('-')[0]));
   if(sp.size){ SPECIAL_HALLS.clear(); sp.forEach(h=>SPECIAL_HALLS.add(h)); }
+  // 실별 품격 (엑셀 '품격' 열)
+  Object.keys(GRADES).forEach(k=>delete GRADES[k]);
+  Object.entries(TP).forEach(([k,v])=>{
+    const p=k.split('-'), g=v.split('|')[0];
+    if(g) (GRADES[p[0]+'_'+p[1]]=GRADES[p[0]+'_'+p[1]]||new Set()).add(g);
+  });
+}
+const GRADES={};
+// 실 품격 배지: 고급 / 일반 / 특별 / 고급·일반(섞인 실)
+function gradeBadge(hall,room){
+  const g=GRADES[hall+'_'+room];
+  if(!g||!g.size) return '';
+  const l=[...g].sort().join('·');
+  return `<span class="gbdg${l==='고급'?' hi':''}">${l}</span>`;
 }
 function bldOfHall(hall){
   return Object.keys(BLDS).find(b=>BLDS[b].halls.includes(hall))||'w';
 }
 
-// ── 종교실 정의 ──
+// ── 종교실 ──
+// 관리자가 '분양 설정 → 종교실'에서 정한 값(config/block.rel)을 사용.
+// 아직 한 번도 저장 안 했으면 아래 기본값 사용
 const REL_CATHOLIC = {
   '매화': new Set(['119','120','123','124','125']),
   '난초': new Set(['104','117','118'])
@@ -543,11 +570,14 @@ const REL_CHRISTIAN = {
   '난초': new Set(['106','107','108','111','112','113','115','116',
                    '119','120','121','122','123','124','125','126','127'])
 };
-function getRel(hall, room){
-  if(REL_CATHOLIC[hall]  && REL_CATHOLIC[hall].has(room))  return 'catholic';
-  if(REL_CHRISTIAN[hall] && REL_CHRISTIAN[hall].has(room)) return 'christian';
-  return null;
+function relMap(){
+  if(BLOCK.rel) return BLOCK.rel;
+  const m={};
+  Object.entries(REL_CATHOLIC).forEach(([h,s])=>s.forEach(r=>m[h+'_'+r]='catholic'));
+  Object.entries(REL_CHRISTIAN).forEach(([h,s])=>s.forEach(r=>m[h+'_'+r]='christian'));
+  return m;
 }
+function getRel(hall, room){ return relMap()[hall+'_'+room]||null; }
 function relBadge(rel){
   if(rel==='catholic')  return '<span class="rel-badge rel-catholic">✝ 천주교</span>';
   if(rel==='christian') return '<span class="rel-badge rel-christian">✞ 기독교</span>';
@@ -647,7 +677,7 @@ function buildLv3(hall){
     const relCls=rel?` is-${rel}`:'';
     const hid=isHiddenRoom(hall,room); // 관리자에게만 보임
     h+=`<div class="lv3-tab${relCls}" data-hall="${hall}" data-room="${room}" onclick="selectRoom('${hall}','${room}')"${hid?' style="opacity:.55"':''}>
-      <span class="rname">${hid?'🚫 ':''}${label}</span>
+      <span class="rname">${hid?'🚫 ':''}${label}</span>${gradeBadge(hall,room)}
       <span class="rbadge">${hid?'숨김 · ':''}미분양 ${s.mi}</span>
     </div>`;
   });
@@ -1346,10 +1376,15 @@ function renderAdmin(){
 }
 
 // ── 분양 설정 관리 (관리자) ──
-// 모든 홀·실을 보여주고 공개/숨김, 칸 단위 분양불가를 한 화면에서 설정
-let CFG_OPEN=false, CFG_HALL=null, CFG_ROOM=null;
+// 탭 ① 숨김·분양불가: 기본은 '설정된 실만'(숨김 또는 분양불가가 있는 실), '전체 실'에서 새로 설정
+// 탭 ② 종교실: 홀별 실 카드에서 없음/천주교/기독교 선택
+let CFG_OPEN=false, CFG_TAB='hide', CFG_MODE='set', CFG_HALL=null, CFG_ROOM=null;
 const byNum=(a,b)=>a.localeCompare(b,void 0,{numeric:true});
 function roomIds(hall){ return Object.keys(RAW[hall]||{}).sort(byNum); }
+function hallOrder(){
+  const known=Object.values(BLDS).flatMap(b=>b.halls).filter(h=>RAW[h]);
+  return [...known, ...Object.keys(RAW).filter(h=>!known.includes(h))];
+}
 // 원본 기준: 미분양 기수(분양불가 제외), 분양불가 칸 수, 미분양 칸 봉안번호
 function rawStats(hall,room){
   const blk=new Set(BLOCK.cells); let mi=0,na=0; const free=[];
@@ -1365,57 +1400,73 @@ function cfgStale(){
   const cells=BLOCK.cells.filter(k=>{ const c=findCell(k); return !c||c[3]===0; });
   return {rooms,cells};
 }
-
-function renderCfg(){
-  document.getElementById('cfg-btn').style.display='inline-block';
-  if(!CFG_OPEN) return;
-  const halls=Object.keys(RAW);
-  if(!CFG_HALL||!RAW[CFG_HALL]) CFG_HALL=halls[0];
-  const hid=new Set(BLOCK.rooms);
-
-  // 요약
-  let vmi=0;
-  halls.forEach(h=>roomIds(h).forEach(r=>{ if(!hid.has(h+'_'+r)) vmi+=rawStats(h,r).mi; }));
-  document.getElementById('cfg-met').innerHTML=
-    `<div>숨긴 실<b>${BLOCK.rooms.length}</b></div><div>분양불가 칸<b>${BLOCK.cells.length}</b></div><div>영업자에게 보이는 미분양<b>${vmi.toLocaleString()}기수</b></div>`;
-
-  // 홀 버튼 (동관/서관, 그 외는 기타)
+function hallChips(){
   const chip=h=>`<button class="${h===CFG_HALL?'on':''}" onclick="CFG_HALL='${esc(h)}';CFG_ROOM=null;renderCfg()">${esc(h)}</button>`;
-  const known=new Set();
-  let hh='';
+  const known=new Set(); let hh='';
   Object.values(BLDS).forEach(info=>{
     const hs=info.halls.filter(h=>RAW[h]); hs.forEach(h=>known.add(h));
     if(hs.length) hh+=`<div class="cfg-lbl">${info.label}</div><div class="adm-chips">${hs.map(chip).join('')}</div>`;
   });
-  const etc=halls.filter(h=>!known.has(h));
+  const etc=Object.keys(RAW).filter(h=>!known.has(h));
   if(etc.length) hh+=`<div class="cfg-lbl">기타</div><div class="adm-chips">${etc.map(chip).join('')}</div>`;
-  document.getElementById('cfg-halls').innerHTML=hh;
+  return hh;
+}
 
-  // 실 목록
-  const hall=CFG_HALL, rooms=roomIds(hall), sp=SPECIAL_HALLS.has(hall), unit=sp?'구역':'실';
+function renderCfg(){
+  document.getElementById('cfg-btn').style.display='inline-block';
+  if(!CFG_OPEN) return;
+  if(!CFG_HALL||!RAW[CFG_HALL]) CFG_HALL=hallOrder()[0];
+  document.getElementById('cfg-tabs').innerHTML=
+    [['hide','🚫 숨김·분양불가'],['rel','✝ 종교실']]
+    .map(([t,l])=>`<button class="${CFG_TAB===t?'on':''}" onclick="CFG_TAB='${t}';CFG_ROOM=null;renderCfg()">${l}</button>`).join('');
+  if(CFG_TAB==='rel') return renderRelTab();
+
+  const hid=new Set(BLOCK.rooms);
+  const isSet=(h,r)=>hid.has(h+'_'+r)||rawStats(h,r).na>0;
+  let nSet=0, vmi=0;
+  hallOrder().forEach(h=>roomIds(h).forEach(r=>{ if(isSet(h,r)) nSet++; if(!hid.has(h+'_'+r)) vmi+=rawStats(h,r).mi; }));
+
+  document.getElementById('cfg-met').innerHTML=
+    `<div class="cfg-met"><div>숨긴 실<b>${BLOCK.rooms.length}</b></div><div>분양불가 칸<b>${BLOCK.cells.length}</b></div><div>영업자에게 보이는 미분양<b>${vmi.toLocaleString()}기수</b></div></div>
+     <div class="adm-chips"><button class="${CFG_MODE==='set'?'on':''}" onclick="CFG_MODE='set';CFG_ROOM=null;renderCfg()">설정된 실만 ${nSet}</button><button class="${CFG_MODE==='all'?'on':''}" onclick="CFG_MODE='all';CFG_ROOM=null;renderCfg()">전체 실</button></div>`;
+
+  const head=unit=>`<div class="cfg-rm" style="border-top:none;padding:4px;font-size:.68rem;color:var(--text2)"><span>${unit}</span><span>영업자 공개</span><span>미분양 / 분양불가</span><span></span></div>`;
   let h='';
-  if(hall){
-    h+=`<div class="cfg-hh"><span>${esc(hall)} · ${rooms.length}개 ${unit}</span>
-      <span><button class="cfg-lk" onclick="cfgHallAll(true)">전체 보이기</button><button class="cfg-lk red" onclick="cfgHallAll(false)">전체 숨기기</button></span></div>
-      <div class="cfg-rm s" style="border-top:none;padding:4px;font-size:.68rem;color:var(--text2)"><span>${unit}</span><span>영업자 공개</span><span>미분양 / 분양불가</span><span></span></div>`;
-    rooms.forEach(room=>{
-      const id=hall+'_'+room, on=!hid.has(id), s=rawStats(hall,room), eh=esc(hall), er=esc(room);
-      h+=`<div class="cfg-rm${on?'':' hid'}">
-        <span class="nm" style="font-weight:600">${er}${unit}${on?'':' <span style="font-weight:400;font-size:.68rem">숨김</span>'}</span>
-        <span><button class="sw${on?' on':''}" aria-label="${er}${unit} 공개" onclick="cfgRoom('${eh}','${er}')"></button> <span style="font-size:.68rem;color:var(--text2)">${on?'보임':'숨김'}</span></span>
-        <span>미분양 ${s.mi}기수 <span style="font-size:.68rem;color:var(--text2)">/ 분양불가 ${s.na}칸</span></span>
-        <span><button class="cfg-lk" onclick="CFG_ROOM=CFG_ROOM==='${er}'?null:'${er}';renderCfg()">${CFG_ROOM===room?'닫기':'칸 설정'}</button></span>
-      </div>`;
-      if(CFG_ROOM===room) h+=cfgGrid(hall,room);
+  if(CFG_MODE==='set'){
+    document.getElementById('cfg-halls').innerHTML='';
+    hallOrder().forEach(hall=>{
+      const rs=roomIds(hall).filter(r=>isSet(hall,r));
+      if(!rs.length) return;
+      h+=`<div class="cfg-hh"><span>${esc(hall)}</span></div>`+head(SPECIAL_HALLS.has(hall)?'구역':'실');
+      rs.forEach(r=>h+=cfgRow(hall,r));
     });
+    if(!h) h='<div class="adm-empty">숨기거나 분양불가로 설정한 실이 없습니다. 새로 설정하려면 전체 실을 누르세요.</div>';
+  } else {
+    document.getElementById('cfg-halls').innerHTML=hallChips();
+    const hall=CFG_HALL, rooms=roomIds(hall), unit=SPECIAL_HALLS.has(hall)?'구역':'실';
+    if(hall){
+      h+=`<div class="cfg-hh"><span>${esc(hall)} · ${rooms.length}개 ${unit}</span>
+        <span><button class="cfg-lk" onclick="cfgHallAll(true)">전체 보이기</button><button class="cfg-lk red" onclick="cfgHallAll(false)">전체 숨기기</button></span></div>`+head(unit);
+      rooms.forEach(r=>h+=cfgRow(hall,r));
+    }
   }
   document.getElementById('cfg-rooms').innerHTML=h;
 
-  // 정리 필요 (엑셀에서 사라진 숨김 실, 이미 분양된 분양불가 칸)
   const st=cfgStale(), n=st.rooms.length+st.cells.length;
   document.getElementById('cfg-foot').innerHTML=
     `초록 = 미분양, 회색 ✕ = 분양불가, 보라 = 분양완료(변경 불가). 칸을 누르면 미분양 ↔ 분양불가가 바뀝니다.`
     +(n?`<br>정리 필요 ${n}건 (엑셀에 없는 실 ${st.rooms.length} · 이미 분양된 칸 ${st.cells.length}) · <button onclick="cfgClean()">정리</button>`:'');
+}
+
+function cfgRow(hall,room){
+  const id=hall+'_'+room, on=!BLOCK.rooms.includes(id), s=rawStats(hall,room), eh=esc(hall), er=esc(room);
+  const unit=SPECIAL_HALLS.has(hall)?'구역':'실', open=CFG_ROOM===id;
+  return `<div class="cfg-rm${on?'':' hid'}">
+    <span class="nm" style="font-weight:600">${er}${unit}${gradeBadge(hall,room)}${on?'':' <span style="font-weight:400;font-size:.68rem">숨김</span>'}</span>
+    <span><button class="sw${on?' on':''}" aria-label="${er}${unit} 공개" onclick="cfgRoom('${eh}','${er}')"></button> <span style="font-size:.68rem;color:var(--text2)">${on?'보임':'숨김'}</span></span>
+    <span>미분양 ${s.mi}기수 <span style="font-size:.68rem;color:var(--text2)">/ 분양불가 ${s.na}칸</span></span>
+    <span><button class="cfg-lk" onclick="CFG_ROOM=CFG_ROOM==='${esc(id)}'?null:'${esc(id)}';renderCfg()">${open?'닫기':'칸 설정'}</button></span>
+  </div>`+(open?cfgGrid(hall,room):'');
 }
 
 // 펼친 실의 칸 배치 (현황판과 같은 모양, 방향별로 세로로)
@@ -1432,6 +1483,32 @@ function cfgGrid(hall,room){
   return `<div class="cfg-grid">${g}
     <button class="cfg-lk" style="margin-left:0" onclick="cfgRoomBulk('${eh}','${er}',true)">미분양 전부 분양불가</button>
     <button class="cfg-lk" onclick="cfgRoomBulk('${eh}','${er}',false)">분양불가 전부 해제</button></div>`;
+}
+
+// ② 종교실 탭
+function renderRelTab(){
+  const m=relMap(), v=Object.values(m);
+  document.getElementById('cfg-met').innerHTML=
+    `<div class="cfg-met" style="grid-template-columns:1fr 1fr">
+      <div class="rel-ca">천주교실<b>${v.filter(x=>x==='catholic').length}실</b></div>
+      <div class="rel-ch">기독교실<b>${v.filter(x=>x==='christian').length}실</b></div></div>`;
+  document.getElementById('cfg-halls').innerHTML=hallChips();
+  const hall=CFG_HALL, unit=SPECIAL_HALLS.has(hall)?'구역':'실';
+  let h='<div class="rel-grid">';
+  roomIds(hall).forEach(room=>{
+    const r=m[hall+'_'+room]||'', eh=esc(hall), er=esc(room);
+    h+=`<div class="rel-card ${r}"><div style="font-weight:600">${er}${unit}${gradeBadge(hall,room)}</div><div class="seg">`
+      +[['','없음'],['catholic','천주교'],['christian','기독교']]
+        .map(([val,l])=>`<button class="${r===val?'on':''}" onclick="cfgRel('${eh}','${er}','${val}')">${l}</button>`).join('')
+      +`</div></div>`;
+  });
+  document.getElementById('cfg-rooms').innerHTML=h+'</div>';
+  document.getElementById('cfg-foot').innerHTML='실마다 없음, 천주교, 기독교 중 하나를 고르면 현황판에 바로 반영돼요.';
+}
+function cfgRel(hall,room,val){
+  const m={...relMap()}, id=hall+'_'+room;
+  if(val) m[id]=val; else delete m[id];
+  blockApi.rel(m).catch(cfgErr);
 }
 
 const cfgErr=err=>alert('저장 실패: '+err.message);
@@ -1645,7 +1722,7 @@ function watchHolds(){
   // 분양불가·숨김 설정: 실시간 반영
   onSnapshot(doc(db,'config','block'), d => {
     const v = d.exists() ? d.data() : {};
-    BLOCK = { rooms: v.rooms || [], cells: v.cells || [] };
+    BLOCK = { rooms: v.rooms || [], cells: v.cells || [], rel: v.rel };
     applyView();
   }, err => console.error('block', err));
 }
@@ -1656,6 +1733,7 @@ window.blockApi = {
                        .catch(err => alert('저장 실패: ' + err.message)),
   cells: (keys, on) => keys.length ? setDoc(doc(db,'config','block'), { cells: on ? arrayUnion(...keys) : arrayRemove(...keys) }, { merge:true }) : Promise.resolve(),
   rooms: (ids, on)  => ids.length ? setDoc(doc(db,'config','block'), { rooms: on ? arrayUnion(...ids) : arrayRemove(...ids) }, { merge:true }) : Promise.resolve(),
+  rel: m => setDoc(doc(db,'config','block'), { rel: m }, { mergeFields:['rel'] }),
   room: (id, on)  => setDoc(doc(db,'config','block'), { rooms: on ? arrayUnion(id) : arrayRemove(id) }, { merge:true })
 };
 
