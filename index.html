@@ -196,7 +196,7 @@ header{background:#253323;color:#deccaa;padding:12px 24px;display:flex;align-ite
 .wz-filter-clear{margin-left:auto;font-size:.68rem;color:#b07010;cursor:pointer;text-decoration:underline;white-space:nowrap;background:none;border:none;font-family:inherit;padding:0}
 
 /* ── 툴팁 ── */
-#tip{position:fixed;z-index:999;background:#1a2818;color:#e8d8a8;padding:10px 14px;border-radius:9px;font-size:.73rem;pointer-events:none;display:none;max-width:270px;line-height:1.8;box-shadow:0 4px 20px rgba(0,0,0,.35)}
+#tip{position:fixed;z-index:1600;background:#1a2818;color:#e8d8a8;padding:10px 14px;border-radius:9px;font-size:.73rem;pointer-events:none;display:none;max-width:270px;line-height:1.8;box-shadow:0 4px 20px rgba(0,0,0,.35)}
 #tip .tn{font-family:'Noto Serif KR',serif;font-size:.86rem;font-weight:600;margin-bottom:4px;padding-bottom:4px;border-bottom:1px solid rgba(255,255,255,.15);color:#f0e0b0;word-break:break-all}
 #tip .ts-mi{color:#7de07d}
 #tip .ts-bun{color:#a898d8}
@@ -240,11 +240,43 @@ header{background:#253323;color:#deccaa;padding:12px 24px;display:flex;align-ite
 #rq-form button,.rq-cancel,.adm-t button{padding:10px;border:none;border-radius:7px;background:var(--accent);color:#fff;font-family:inherit;font-weight:600;cursor:pointer}
 .rq-cancel{background:#b04040;margin-top:6px}
 #rq-msg{font-size:.75rem;color:#c04040;margin-top:8px}
-.adm-t{width:100%;border-collapse:collapse;font-size:.76rem}
-.adm-t th,.adm-t td{padding:7px 6px;border-bottom:1px solid var(--border);text-align:left;white-space:nowrap}
-.adm-t th{color:var(--text2);font-weight:500}
-.adm-t button{padding:4px 10px;font-size:.7rem;margin-right:4px}
-.adm-t button.no{background:#b04040}
+.adm-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.adm-chips button{padding:6px 12px;border:1px solid var(--border);border-radius:7px;background:#fff;font-family:inherit;font-size:.74rem;color:var(--text2);cursor:pointer}
+.adm-chips button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.adm-q{width:100%;padding:9px 10px;border:1px solid var(--border);border-radius:7px;font-family:inherit;font-size:.8rem;margin-bottom:4px}
+.adm-row{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) minmax(0,1fr) auto;gap:10px;align-items:center;padding:11px 2px;border-top:1px solid var(--border);font-size:.78rem}
+.adm-row .k{font-family:monospace;font-size:.82rem;font-weight:600}
+.adm-row .s{font-size:.68rem;color:var(--text2)}
+.adm-act{display:flex;gap:4px;align-items:center;justify-content:flex-end;flex-wrap:wrap}
+.adm-act button{padding:5px 10px;border:none;border-radius:6px;background:var(--accent);color:#fff;font-family:inherit;font-size:.7rem;cursor:pointer}
+.adm-act button.sub{background:#fff;color:var(--accent);border:1px solid var(--accent)}
+.adm-act button.no{background:#b04040}
+.bdg{font-size:.66rem;padding:2px 8px;border-radius:5px;white-space:nowrap}
+.bdg.req{background:#fef3c7;color:#92400e}.bdg.ok{background:#dbeafe;color:#1e40af}
+.bdg.exp{background:#eee;color:#666}.bdg.sold{background:#fee2e2;color:#991b1b}
+.dday-red{color:#c04040;font-weight:600}
+.adm-foot{margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:.72rem;color:var(--text2)}
+.adm-foot button{background:none;border:none;color:#2563eb;text-decoration:underline;cursor:pointer;font-family:inherit;font-size:.72rem}
+.cfg-met{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:12px}
+.cfg-met>div{background:#f4f1ec;border-radius:8px;padding:9px 12px;font-size:.68rem;color:var(--text2)}
+.cfg-met b{display:block;font-size:1.15rem;color:var(--text);font-weight:600;margin-top:2px}
+.cfg-lbl{font-size:.68rem;color:var(--text2);margin:4px 0 5px}
+.cfg-hh{display:flex;justify-content:space-between;align-items:center;background:#f4f1ec;border-radius:7px;padding:8px 10px;margin:6px 0 2px;font-size:.8rem;font-weight:600}
+.cfg-lk{background:none;border:none;color:#2563eb;font-family:inherit;font-size:.72rem;cursor:pointer;padding:0;margin-left:12px}
+.cfg-lk.red{color:#b04040}
+.cfg-rm{display:grid;grid-template-columns:minmax(0,1fr) 96px minmax(0,1.3fr) auto;gap:10px;align-items:center;padding:10px 4px;border-top:1px solid var(--border);font-size:.78rem}
+.cfg-rm.hid .nm{color:var(--text2)}
+.sw{width:36px;height:20px;border-radius:10px;background:#ccc;position:relative;cursor:pointer;border:none;padding:0;vertical-align:middle}
+.sw::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .15s}
+.sw.on{background:#3a9870}.sw.on::after{left:18px}
+.cfg-grid{border-top:1px dashed var(--border);padding:8px 0 10px}
+.cfg-grid .dgwrap{padding:0 0 8px;max-width:100%}
+.cfg-dir{font-size:.7rem;font-weight:600;color:var(--accent);margin:8px 0 4px}
+@media(max-width:600px){.cfg-rm{grid-template-columns:1fr auto}.cfg-met b{font-size:1rem}}
+.adm-empty{padding:18px 4px;color:var(--text2);font-size:.78rem}
+@media(max-width:600px){.adm-row{grid-template-columns:1fr 1fr}.adm-row>div:first-child{grid-column:1/-1}.adm-act{grid-column:1/-1;justify-content:flex-start}}
+.cell.pulse,.cell-b.pulse{animation:pulse 1s ease-in-out 3;outline:3px solid #2563eb;outline-offset:2px}
+@keyframes pulse{50%{transform:scale(1.25)}}
 #loading small{font-size:.7rem;color:#9a9288;margin-top:8px;font-family:'Noto Sans KR',sans-serif}
 
 @media(max-width:600px){
@@ -288,6 +320,7 @@ header{background:#253323;color:#deccaa;padding:12px 24px;display:flex;align-ite
     <div id="upload-status" style="font-size:.68rem;color:#e8c860;white-space:nowrap">⏳ 데이터 불러오는 중...</div>
     <div style="font-size:.66rem;color:#7a9e78"><span id="who"></span><span id="my-hold"></span>
       <button class="lg-out" id="adm-btn" style="display:none;color:#e8c860;border-color:#e8c860" onclick="document.getElementById('adm').style.display='flex'">📋 예약 관리</button>
+      <button class="lg-out" id="cfg-btn" style="display:none;color:#e8c860;border-color:#e8c860" onclick="CFG_OPEN=true;renderCfg();document.getElementById('cfg').style.display='flex'">🔧 분양 설정</button>
       <button class="lg-out" onclick="doLogout()">로그아웃</button></div>
   </div>
 </header>
@@ -430,16 +463,25 @@ header{background:#253323;color:#deccaa;padding:12px 24px;display:flex;align-ite
   </div>
 </div>
 
+<!-- 관리자: 분양불가·숨긴 실 관리 -->
+<div id="cfg" class="ovl" style="display:none" onclick="if(event.target===this){this.style.display='none';CFG_OPEN=false}">
+  <div class="ovl-card" style="max-width:760px">
+    <div class="ovl-h">🔧 분양 설정 관리 <button class="ovl-x" onclick="document.getElementById('cfg').style.display='none';CFG_OPEN=false">✕</button></div>
+    <div class="cfg-met" id="cfg-met"></div>
+    <div id="cfg-halls"></div>
+    <div id="cfg-rooms"></div>
+    <div class="adm-foot" id="cfg-foot"></div>
+  </div>
+</div>
+
 <!-- 관리자: 예약 요청 관리 -->
 <div id="adm" class="ovl" style="display:none" onclick="if(event.target===this)this.style.display='none'">
-  <div class="ovl-card" style="max-width:820px">
-    <div class="ovl-h">📋 예약 요청 관리 <button class="ovl-x" onclick="document.getElementById('adm').style.display='none'">✕</button></div>
-    <div style="overflow-x:auto">
-      <table class="adm-t">
-        <thead><tr><th>봉안번호</th><th>영업자</th><th>고인명</th><th>안치예정일</th><th>상태</th><th></th></tr></thead>
-        <tbody id="adm-body"></tbody>
-      </table>
-    </div>
+  <div class="ovl-card" style="max-width:720px">
+    <div class="ovl-h">📋 예약 관리 <button class="ovl-x" onclick="document.getElementById('adm').style.display='none'">✕</button></div>
+    <div class="adm-chips" id="adm-chips"></div>
+    <input class="adm-q" id="adm-q" placeholder="봉안번호, 영업자, 고인명 검색" oninput="ADM_Q=this.value.trim();renderAdmin()">
+    <div id="adm-list"></div>
+    <div class="adm-foot" id="adm-foot"></div>
   </div>
 </div>
 
@@ -780,8 +822,8 @@ function renderGrid(hall,room,dir){
         const hd=isMi?activeHold(key):null;
         const hdCls=hd?` hold-${hd.status}${hd.uid===ME?' hold-mine':''}`:'';
         const na=cell[3]===2; // 분양불가
-        h+=`<div class="${cellCls} ${cls}${isHl&&!hd?' hl-match':''}${hdCls}${na?' na':''}${EDIT&&cell[3]!==0?' editable':''}" style="width:${w}px;height:${sz}px"
-          onclick="cellClick('${ek}',${cell[3]})"
+        h+=`<div class="${cellCls} ${cls}${isHl&&!hd?' hl-match':''}${hdCls}${na?' na':''}${(EDIT||CFG_OPEN)&&cell[3]!==0?' editable':''}" style="width:${w}px;height:${sz}px"
+          data-key="${key}" onclick="cellClick('${ek}',${cell[3]})"
           onmouseenter="showT(event,'${ek}')" onmouseleave="hideT()" ontouchstart="showT(event,'${ek}');event.stopPropagation()" ontouchend="event.stopPropagation()">
           <span class="cell-ico">${na?(isBu?'✕✕':'✕'):hd?(isBu?'◐◐':'◐'):isMi?(isBu?'○○':'○'):(isBu?'●●':'●')}</span>
           ${sz>=28?`<span class="cell-seq">${cell[0]}</span>`:''}
@@ -1136,6 +1178,8 @@ function applyView(){
   document.querySelectorAll('.lv2-tab').forEach(t=>t.classList.toggle('active',t.dataset.hall===curHall));
   if(curHall&&ST[curHall]&&document.getElementById('lv3-row').style.display!=='none') buildLv3(curHall);
   if(curHall&&curRoom) renderRoom(curHall,curRoom);
+  if(ADMIN_INFO) renderAdmin(); // 엑셀 반영 후 '이미 분양' 분류 갱신
+  if(IS_ADMIN) renderCfg();
 }
 function toggleEdit(){ EDIT=!EDIT; if(curHall&&curRoom) renderRoom(curHall,curRoom); }
 function toggleRoomHidden(hall,room){
@@ -1179,7 +1223,7 @@ function holdsChanged(){
 
 function cellClick(key,st){
   hideT();
-  if(EDIT){ if(st!==0) blockApi.cell(key, st===1); return; } // 관리자 설정 모드: 미분양 ↔ 분양불가
+  if(EDIT||CFG_OPEN){ if(st!==0) blockApi.cell(key, st===1); return; } // 관리자 설정 모드: 미분양 ↔ 분양불가
   if(st!==1) return;
   const h=activeHold(key), mine=h&&h.uid===ME;
   const dlg=document.getElementById('rq');
@@ -1226,29 +1270,211 @@ async function rqCancel(){
 }
 
 // ── 관리자 ──
+let ADM_F='대기', ADM_Q='';
+
+// 봉안번호 → "매화 111실 · 좌측 1열 5단 · 개인단"
+function keyLabel(key){
+  const p=key.split('-'), c=findCell(key);
+  const type=c?(c[2]==='부'?'부부단':'개인단'):'';
+  if(p.length===3) return [`${p[0]} ${p[1]}구역`,c?c[1]+'단':'',type].filter(Boolean).join(' · ');
+  const dir={L:'좌측',F:'정면',R:'우측',B:'후면'}[p[2][0]]||p[2][0];
+  return [`${p[0]} ${p[1]}실`,`${dir} ${p[2].slice(1)}열`+(c?` ${c[1]}단`:''),type].join(' · ');
+}
+function dday(date){
+  const d=Math.round((new Date(date+'T00:00:00')-new Date(todayStr()+'T00:00:00'))/864e5);
+  return d===0?'D-day':d>0?'D-'+d:'D+'+(-d);
+}
+function fmtTs(ts){
+  if(!ts||!ts.toDate) return '';
+  const d=ts.toDate(), t=new Date();
+  const hm=`${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
+  if(d.toDateString()===t.toDateString()) return '오늘 '+hm;
+  return `${d.getMonth()+1}/${d.getDate()} ${hm}`;
+}
+// 상태: 대기 / 가예약 / 정리(만료·이미 분양·분양불가·요청 기록 없음)
+function admRows(){
+  return Object.keys(ADMIN_INFO).map(k=>{
+    const hd=HOLDS[k], c=findCell(k), i=ADMIN_INFO[k];
+    let st, why='';
+    if(!hd){ st='정리'; why='기록 없음'; }
+    else if(c&&c[3]===0){ st='정리'; why='이미 분양'; }
+    else if(c&&c[3]===2){ st='정리'; why='분양불가'; }
+    else if(!activeHold(k)){ st='정리'; why='만료'; }
+    else st=hd.status==='ok'?'가예약':'대기';
+    return {k,i,hd,st,why};
+  });
+}
+
 function renderAdmin(){
-  const rows=Object.keys(ADMIN_INFO).map(k=>{
-    const hd=HOLDS[k];
-    const st=!hd?'없음':!activeHold(k)?'만료':hd.status==='ok'?'가예약':'대기';
-    return {k,i:ADMIN_INFO[k],st};
-  }).sort((a,b)=>(a.st==='대기'?0:1)-(b.st==='대기'?0:1)||a.k.localeCompare(b.k,void 0,{numeric:true}));
-  const pend=rows.filter(r=>r.st==='대기').length;
+  const all=admRows();
+  const cnt={대기:0,가예약:0,정리:0};
+  all.forEach(r=>cnt[r.st]++);
   const btn=document.getElementById('adm-btn');
   btn.style.display='inline-block';
-  btn.textContent='📋 예약 관리'+(pend?` (대기 ${pend})`:'');
+  btn.textContent='📋 예약 관리'+(cnt.대기?` (대기 ${cnt.대기})`:'');
+
+  document.getElementById('adm-chips').innerHTML=
+    [['대기',`대기 ${cnt.대기}`],['가예약',`가예약 ${cnt.가예약}`],['정리',`정리 필요 ${cnt.정리}`],['all',`전체 ${all.length}`]]
+    .map(([f,l])=>`<button class="${ADM_F===f?'on':''}" onclick="ADM_F='${f}';renderAdmin()">${l}</button>`).join('');
+
+  const q=ADM_Q.toLowerCase();
+  const rows=all.filter(r=>(ADM_F==='all'||r.st===ADM_F)
+      &&(!q||[r.k,r.i.seller,r.i.deceased].some(v=>String(v||'').toLowerCase().includes(q))))
+    .sort((a,b)=>String(a.i.date).localeCompare(String(b.i.date))||a.k.localeCompare(b.k,void 0,{numeric:true}));
+
   let h='';
-  rows.forEach(({k,i,st})=>{
-    const c=findCell(k), sold=c&&c[3]===0?' <span style="color:#c04040">(이미 분양)</span>':'';
-    h+=`<tr><td>${esc(k)}${sold}</td><td>${esc(i.seller)}</td><td>${esc(i.deceased)}</td><td>${esc(i.date)}</td>
-      <td>${st==='대기'?'<strong style="color:#b45309">대기</strong>':st}</td><td>
-      ${st==='대기'?`<button onclick="admAccept('${esc(k)}')">수락</button>`:''}
-      <button class="no" onclick="admRemove('${esc(k)}','${st}')">${st==='대기'?'거절':'해제'}</button></td></tr>`;
+  rows.forEach(({k,i,hd,st,why})=>{
+    const ek=esc(k), dd=dday(i.date);
+    const red=st!=='정리'&&/^D-(day|1)$/.test(dd)?' class="dday-red"':'';
+    const bdg=st==='대기'?'<span class="bdg req">대기</span>'
+             :st==='가예약'?'<span class="bdg ok">가예약</span>'
+             :`<span class="bdg ${why==='이미 분양'?'sold':'exp'}">${why}</span>`;
+    const when=st==='대기'?'요청 '+fmtTs(hd&&hd.at):st==='가예약'?'수락 '+fmtTs(hd&&(hd.okAt||hd.at)):(why==='만료'?'안치일 지남':why==='이미 분양'?'엑셀에 분양 반영됨':'');
+    const act=st==='대기'?`<button onclick="admAccept('${ek}')">수락</button><button class="no" onclick="admRemove('${ek}','거절')">거절</button>`
+             :st==='가예약'?`<button class="sub" onclick="admGoTo('${ek}')">📍 자리</button><button class="no" onclick="admRemove('${ek}','해제')">해제</button>`
+             :`<button class="sub" onclick="admRemove('${ek}','정리')">정리</button>`;
+    h+=`<div class="adm-row">
+      <div><div class="k">${ek}</div><div class="s">${esc(keyLabel(k))}</div></div>
+      <div><div>${esc(i.seller)}</div><div class="s">고인 ${esc(i.deceased)}</div></div>
+      <div><div>${esc(String(i.date).slice(5).replace('-','/'))} ${st==='정리'?'':`<span${red}>${dd}</span>`}</div><div class="s">${when}</div></div>
+      <div class="adm-act">${bdg}${act}</div>
+    </div>`;
   });
-  document.getElementById('adm-body').innerHTML=h||'<tr><td colspan="6" style="color:var(--text2)">요청 없음</td></tr>';
+  document.getElementById('adm-list').innerHTML=h||'<div class="adm-empty">해당하는 요청이 없습니다.</div>';
+  document.getElementById('adm-foot').innerHTML=cnt.정리
+    ?`정리 필요 ${cnt.정리}건 · <button onclick="admCleanAll()">한 번에 정리</button>`:'';
+}
+
+// ── 분양 설정 관리 (관리자) ──
+// 모든 홀·실을 보여주고 공개/숨김, 칸 단위 분양불가를 한 화면에서 설정
+let CFG_OPEN=false, CFG_HALL=null, CFG_ROOM=null;
+const byNum=(a,b)=>a.localeCompare(b,void 0,{numeric:true});
+function roomIds(hall){ return Object.keys(RAW[hall]||{}).sort(byNum); }
+// 원본 기준: 미분양 기수(분양불가 제외), 분양불가 칸 수, 미분양 칸 봉안번호
+function rawStats(hall,room){
+  const blk=new Set(BLOCK.cells); let mi=0,na=0; const free=[];
+  Object.entries(RAW[hall][room]).forEach(([dir,cols])=>Object.entries(cols).forEach(([col,cells])=>cells.forEach(c=>{
+    if(c[3]!==1) return;
+    const k=buildKey(hall,room,dir,col,c[0]);
+    if(blk.has(k)) na++; else { mi+=c[2]==='부'?2:1; free.push(k); }
+  })));
+  return {mi,na,free};
+}
+function cfgStale(){
+  const rooms=BLOCK.rooms.filter(id=>{ const [h,r]=id.split('_'); return !(RAW[h]&&RAW[h][r]); });
+  const cells=BLOCK.cells.filter(k=>{ const c=findCell(k); return !c||c[3]===0; });
+  return {rooms,cells};
+}
+
+function renderCfg(){
+  document.getElementById('cfg-btn').style.display='inline-block';
+  if(!CFG_OPEN) return;
+  const halls=Object.keys(RAW);
+  if(!CFG_HALL||!RAW[CFG_HALL]) CFG_HALL=halls[0];
+  const hid=new Set(BLOCK.rooms);
+
+  // 요약
+  let vmi=0;
+  halls.forEach(h=>roomIds(h).forEach(r=>{ if(!hid.has(h+'_'+r)) vmi+=rawStats(h,r).mi; }));
+  document.getElementById('cfg-met').innerHTML=
+    `<div>숨긴 실<b>${BLOCK.rooms.length}</b></div><div>분양불가 칸<b>${BLOCK.cells.length}</b></div><div>영업자에게 보이는 미분양<b>${vmi.toLocaleString()}기수</b></div>`;
+
+  // 홀 버튼 (동관/서관, 그 외는 기타)
+  const chip=h=>`<button class="${h===CFG_HALL?'on':''}" onclick="CFG_HALL='${esc(h)}';CFG_ROOM=null;renderCfg()">${esc(h)}</button>`;
+  const known=new Set();
+  let hh='';
+  Object.values(BLDS).forEach(info=>{
+    const hs=info.halls.filter(h=>RAW[h]); hs.forEach(h=>known.add(h));
+    if(hs.length) hh+=`<div class="cfg-lbl">${info.label}</div><div class="adm-chips">${hs.map(chip).join('')}</div>`;
+  });
+  const etc=halls.filter(h=>!known.has(h));
+  if(etc.length) hh+=`<div class="cfg-lbl">기타</div><div class="adm-chips">${etc.map(chip).join('')}</div>`;
+  document.getElementById('cfg-halls').innerHTML=hh;
+
+  // 실 목록
+  const hall=CFG_HALL, rooms=roomIds(hall), sp=SPECIAL_HALLS.has(hall), unit=sp?'구역':'실';
+  let h='';
+  if(hall){
+    h+=`<div class="cfg-hh"><span>${esc(hall)} · ${rooms.length}개 ${unit}</span>
+      <span><button class="cfg-lk" onclick="cfgHallAll(true)">전체 보이기</button><button class="cfg-lk red" onclick="cfgHallAll(false)">전체 숨기기</button></span></div>
+      <div class="cfg-rm s" style="border-top:none;padding:4px;font-size:.68rem;color:var(--text2)"><span>${unit}</span><span>영업자 공개</span><span>미분양 / 분양불가</span><span></span></div>`;
+    rooms.forEach(room=>{
+      const id=hall+'_'+room, on=!hid.has(id), s=rawStats(hall,room), eh=esc(hall), er=esc(room);
+      h+=`<div class="cfg-rm${on?'':' hid'}">
+        <span class="nm" style="font-weight:600">${er}${unit}${on?'':' <span style="font-weight:400;font-size:.68rem">숨김</span>'}</span>
+        <span><button class="sw${on?' on':''}" aria-label="${er}${unit} 공개" onclick="cfgRoom('${eh}','${er}')"></button> <span style="font-size:.68rem;color:var(--text2)">${on?'보임':'숨김'}</span></span>
+        <span>미분양 ${s.mi}기수 <span style="font-size:.68rem;color:var(--text2)">/ 분양불가 ${s.na}칸</span></span>
+        <span><button class="cfg-lk" onclick="CFG_ROOM=CFG_ROOM==='${er}'?null:'${er}';renderCfg()">${CFG_ROOM===room?'닫기':'칸 설정'}</button></span>
+      </div>`;
+      if(CFG_ROOM===room) h+=cfgGrid(hall,room);
+    });
+  }
+  document.getElementById('cfg-rooms').innerHTML=h;
+
+  // 정리 필요 (엑셀에서 사라진 숨김 실, 이미 분양된 분양불가 칸)
+  const st=cfgStale(), n=st.rooms.length+st.cells.length;
+  document.getElementById('cfg-foot').innerHTML=
+    `초록 = 미분양, 회색 ✕ = 분양불가, 보라 = 분양완료(변경 불가). 칸을 누르면 미분양 ↔ 분양불가가 바뀝니다.`
+    +(n?`<br>정리 필요 ${n}건 (엑셀에 없는 실 ${st.rooms.length} · 이미 분양된 칸 ${st.cells.length}) · <button onclick="cfgClean()">정리</button>`:'');
+}
+
+// 펼친 실의 칸 배치 (현황판과 같은 모양, 방향별로 세로로)
+function cfgGrid(hall,room){
+  if(!ST[hall]||!ST[hall][room]) return '';
+  const DO=SPECIAL_HALLS.has(hall)?DIR_ORDER_SPECIAL:DIR_ORDER_NORMAL;
+  const keep=csz; csz=22;
+  let g='';
+  DO.filter(d=>ST[hall][room][d]).forEach(d=>{
+    g+=`<div class="cfg-dir">${DIR_LABEL[d]||d}</div><div class="dgwrap"><div class="dg">${renderGrid(hall,room,d)}</div></div>`;
+  });
+  csz=keep;
+  const er=esc(room), eh=esc(hall);
+  return `<div class="cfg-grid">${g}
+    <button class="cfg-lk" style="margin-left:0" onclick="cfgRoomBulk('${eh}','${er}',true)">미분양 전부 분양불가</button>
+    <button class="cfg-lk" onclick="cfgRoomBulk('${eh}','${er}',false)">분양불가 전부 해제</button></div>`;
+}
+
+const cfgErr=err=>alert('저장 실패: '+err.message);
+function cfgRoom(hall,room){ const id=hall+'_'+room; blockApi.room(id,!BLOCK.rooms.includes(id)).catch(cfgErr); }
+function cfgHallAll(show){
+  const ids=roomIds(CFG_HALL).map(r=>CFG_HALL+'_'+r);
+  if(!confirm(`${CFG_HALL}의 ${ids.length}개 실을 모두 ${show?'보이게':'숨기게'} 할까요?`)) return;
+  blockApi.rooms(ids,!show).catch(cfgErr);
+}
+function cfgRoomBulk(hall,room,block){
+  const keys=block?rawStats(hall,room).free:BLOCK.cells.filter(k=>k.startsWith(hall+'-'+room+'-'));
+  if(!keys.length) return alert(block?'분양불가로 바꿀 미분양 칸이 없습니다.':'해제할 분양불가 칸이 없습니다.');
+  if(!confirm(`${hall} ${room}실의 ${keys.length}칸을 ${block?'분양불가로 바꿀까요':'다시 미분양으로 풀까요'}?`)) return;
+  blockApi.cells(keys,block).catch(cfgErr);
+}
+async function cfgClean(){
+  const st=cfgStale();
+  if(!confirm(`정리 필요 ${st.rooms.length+st.cells.length}건을 설정에서 지울까요?`)) return;
+  try{ await blockApi.rooms(st.rooms,false); await blockApi.cells(st.cells,false); }catch(err){ cfgErr(err); }
+}
+
+// 📍 자리: 현황판의 해당 실로 이동하고 그 칸을 깜빡여 표시
+function admGoTo(key){
+  document.getElementById('adm').style.display='none';
+  document.getElementById('cfg').style.display='none'; CFG_OPEN=false;
+  const p=key.split('-'), hall=p[0], room=p[1];
+  goToRoom(hall,room);
+  fromSearch=false;
+  let dir=p.length===4?p[2][0]:null;
+  if(!dir&&ST[hall]&&ST[hall][room]) dir=Object.keys(ST[hall][room]).find(d=>Object.values(ST[hall][room][d]).some(cs=>cs.some(c=>c[0]===p[2])));
+  if(dir) curDir[hall+'_'+room]=dir;
+  renderRoom(hall,room);
+  const el=document.querySelector(`[data-key="${CSS.escape(key)}"]`);
+  if(el){ el.classList.add('pulse'); el.scrollIntoView({block:'center',inline:'center'}); }
+}
+async function admCleanAll(){
+  const ks=admRows().filter(r=>r.st==='정리').map(r=>r.k);
+  if(!ks.length||!confirm(`정리 필요 ${ks.length}건을 모두 해제할까요?`)) return;
+  for(const k of ks){ try{ await holdApi.remove(k); }catch(err){ alert(k+' 정리 실패: '+err.message); } }
 }
 function admAccept(k){ holdApi.accept(k).catch(err=>alert('수락 실패: '+err.message)); }
-function admRemove(k,st){
-  if(!confirm(`${k} 요청을 ${st==='대기'?'거절':'해제'}할까요?`)) return;
+function admRemove(k,what){
+  if(!confirm(`${k} 요청을 ${what}할까요?`)) return;
   holdApi.remove(k).catch(err=>alert('처리 실패: '+err.message));
 }
 
@@ -1399,7 +1625,7 @@ window.holdApi = {
     b.delete(doc(db,'holdInfo',key));
     await b.commit();
   },
-  accept: key => updateDoc(doc(db,'holds',key), { status:'ok' })
+  accept: key => updateDoc(doc(db,'holds',key), { status:'ok', okAt: serverTimestamp() })
 };
 
 function watchHolds(){
@@ -1428,6 +1654,8 @@ function watchHolds(){
 window.blockApi = {
   cell: (key, on) => setDoc(doc(db,'config','block'), { cells: on ? arrayUnion(key) : arrayRemove(key) }, { merge:true })
                        .catch(err => alert('저장 실패: ' + err.message)),
+  cells: (keys, on) => keys.length ? setDoc(doc(db,'config','block'), { cells: on ? arrayUnion(...keys) : arrayRemove(...keys) }, { merge:true }) : Promise.resolve(),
+  rooms: (ids, on)  => ids.length ? setDoc(doc(db,'config','block'), { rooms: on ? arrayUnion(...ids) : arrayRemove(...ids) }, { merge:true }) : Promise.resolve(),
   room: (id, on)  => setDoc(doc(db,'config','block'), { rooms: on ? arrayUnion(id) : arrayRemove(id) }, { merge:true })
 };
 
